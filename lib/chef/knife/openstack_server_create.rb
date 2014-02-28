@@ -402,6 +402,8 @@ class Chef
           msg_pair("Network", name)
           msg_pair("  IP Address", addr[0]['addr'])
         end
+        msg_pair("Public IP Address", primary_public_ip_address(server.addresses)) if primary_public_ip_address(server.addresses)
+        msg_pair("Private IP Address", primary_private_ip_address(server.addresses)) if primary_private_ip_address(server.addresses)
         msg_pair("Environment", config[:environment] || '_default')
         msg_pair("Run List", config[:run_list].join(', '))
       end
