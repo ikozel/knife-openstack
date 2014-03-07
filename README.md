@@ -108,18 +108,18 @@ Outputs a list of the security groups available to the currently configured Open
 knife openstack network list
 --------------------
 
-Outputs a list of the networks available to the currently configured OpenStack Compute cloud account. This data may be useful when choosing your networks to pass to the `knife openstack server create` subcommand.
+Outputs a list of the networks available to the currently configured OpenStack Compute cloud account. This data may be useful when choosing your networks to pass to the `knife openstack server create` subcommand. This command is only available with OpenStack deployments using the Neutron Network service.
 
 
 # License #
 
-Author:: Seth Chisamore (<schisamo@opscode.com>)
+Author:: Seth Chisamore (<schisamo@getchef.com>)
 
-Author:: Matt Ray (<matt@opscode.com>)
+Author:: Matt Ray (<matt@getchef.com>)
 
 Author:: Chirag Jog (<chirag@clogeny.com>)
 
-Copyright:: Copyright (c) 2011-2013 Opscode, Inc.
+Copyright:: Copyright (c) 2011-2014 Opscode, Inc.
 
 License:: Apache License, Version 2.0
 

@@ -1,7 +1,7 @@
 #
-# Author:: Seth Chisamore (<schisamo@opscode.com>)
-# Author:: Matt Ray (<matt@opscode.com>)
-# Copyright:: Copyright (c) 2011-2013 Opscode, Inc.
+# Author:: Seth Chisamore (<schisamo@getchef.com>)
+# Author:: Matt Ray (<matt@getchef.com>)
+# Copyright:: Copyright (c) 2011-2014 Chef Software, Inc.
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,27 +37,27 @@ class Chef
           end
 
           option :openstack_username,
-            :short => "-A USERNAME",
-            :long => "--openstack-username KEY",
-            :description => "Your OpenStack Username",
-            :proc => Proc.new { |key| Chef::Config[:knife][:openstack_username] = key }
+          :short => "-A USERNAME",
+          :long => "--openstack-username KEY",
+          :description => "Your OpenStack Username",
+          :proc => Proc.new { |key| Chef::Config[:knife][:openstack_username] = key }
 
           option :openstack_password,
-            :short => "-K SECRET",
-            :long => "--openstack-password SECRET",
-            :description => "Your OpenStack Password",
-            :proc => Proc.new { |key| Chef::Config[:knife][:openstack_password] = key }
+          :short => "-K SECRET",
+          :long => "--openstack-password SECRET",
+          :description => "Your OpenStack Password",
+          :proc => Proc.new { |key| Chef::Config[:knife][:openstack_password] = key }
 
           option :openstack_tenant,
-            :short => "-T NAME",
-            :long => "--openstack-tenant NAME",
-            :description => "Your OpenStack Tenant NAME",
-            :proc => Proc.new { |key| Chef::Config[:knife][:openstack_tenant] = key }
+          :short => "-T NAME",
+          :long => "--openstack-tenant NAME",
+          :description => "Your OpenStack Tenant NAME",
+          :proc => Proc.new { |key| Chef::Config[:knife][:openstack_tenant] = key }
 
           option :openstack_auth_url,
-            :long => "--openstack-api-endpoint ENDPOINT",
-            :description => "Your OpenStack API endpoint",
-            :proc => Proc.new { |endpoint| Chef::Config[:knife][:openstack_auth_url] = endpoint }
+          :long => "--openstack-api-endpoint ENDPOINT",
+          :description => "Your OpenStack API endpoint",
+          :proc => Proc.new { |endpoint| Chef::Config[:knife][:openstack_auth_url] = endpoint }
 
           option :openstack_endpoint_type,
             :long => "--openstack-endpoint-type ENDPOINT_TYPE",
@@ -82,7 +82,7 @@ class Chef
         Chef::Log.debug("openstack_insecure #{Chef::Config[:knife][:openstack_insecure].to_s}")
 
         @connection ||= begin
-          connection = Fog::Compute.new(
+                          connection = Fog::Compute.new(
             :provider => 'OpenStack',
             :openstack_username => Chef::Config[:knife][:openstack_username],
             :openstack_api_key => Chef::Config[:knife][:openstack_password],
@@ -109,7 +109,7 @@ class Chef
         Chef::Log.debug("openstack_insecure #{Chef::Config[:knife][:openstack_insecure].to_s}")
 
         @network ||= begin
-          network = Fog::Network.new(
+                       network = Fog::Network.new(
             :provider => 'OpenStack',
             :openstack_username => Chef::Config[:knife][:openstack_username],
             :openstack_api_key => Chef::Config[:knife][:openstack_password],
@@ -119,13 +119,16 @@ class Chef
               :ssl_verify_peer => !Chef::Config[:knife][:openstack_insecure]
             }
             )
-                        rescue Excon::Errors::Unauthorized => e
-                          ui.fatal("Connection failure, please check your OpenStack username and password.")
-                          exit 1
-                        rescue Excon::Errors::SocketError => e
-                          ui.fatal("Connection failure, please check your OpenStack authentication URL.")
-                          exit 1
-                        end
+                     rescue Excon::Errors::Unauthorized => e
+                       ui.fatal("Connection failure, please check your OpenStack username and password.")
+                       exit 1
+                     rescue Excon::Errors::SocketError => e
+                       ui.fatal("Connection failure, please check your OpenStack authentication URL.")
+                       exit 1
+                     rescue Fog::Errors::NotFound => e
+                       ui.fatal("OpenStack Network service not found, this is unavailable with nova-network.")
+                       exit 1
+                     end
       end
 
       def locate_config_value(key)
