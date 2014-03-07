@@ -63,10 +63,10 @@ class Chef
       :long => "--node-name NAME",
       :description => "The Chef node name for your new node"
 
-      option :network_ids,
-      :long => "--network-ids NETWORK_ID_1,NETWORK_ID_2,NETWORK_ID_3",
-      :description => "Comma separated list of the UUID(s) of the network(s) to create on your new node",
-      :proc => Proc.new { |networks| networks.split(',') }
+      # option :network,
+      # :long => "--network UUID1,UUID2",
+      # :description => "Comma separated list of network UUIDs to attach to (only available with Neutron).",
+      # :proc => Proc.new { |networks| networks.split(',') }
 
       option :floating_ip,
       :short => "-a [IP]",
