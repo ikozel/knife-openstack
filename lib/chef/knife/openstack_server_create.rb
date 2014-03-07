@@ -63,10 +63,10 @@ class Chef
       :long => "--node-name NAME",
       :description => "The Chef node name for your new node"
 
-      # option :network,
-      # :long => "--network UUID1,UUID2",
-      # :description => "Comma separated list of network UUIDs to attach to (only available with Neutron).",
-      # :proc => Proc.new { |networks| networks.split(',') }
+      option :network,
+      :long => "--network UUID1,UUID2",
+      :description => "Comma separated list of network UUIDs to attach to (only available with Neutron).",
+      :proc => Proc.new { |networks| networks.split(',') }
 
       option :floating_ip,
       :short => "-a [IP]",
@@ -271,23 +271,21 @@ class Chef
         node_name = get_node_name(config[:chef_node_name])
 
         # this really should be caught in Fog
-        if locate_config_value(:user_data).nil?
-          server_def = {
-            :name => node_name,
-            :image_ref => locate_config_value(:image),
-            :flavor_ref => locate_config_value(:flavor),
-            :security_groups => locate_config_value(:security_groups),
-            :key_name => locate_config_value(:openstack_ssh_key_id)
-          }
-        else
-          server_def = {
-            :name => node_name,
-            :image_ref => locate_config_value(:image),
-            :flavor_ref => locate_config_value(:flavor),
-            :security_groups => locate_config_value(:security_groups),
-            :key_name => locate_config_value(:openstack_ssh_key_id),
-            :user_data => locate_config_value(:user_data)
-          }
+        server_def = {
+          :name => node_name,
+          :image_ref => locate_config_value(:image),
+          :flavor_ref => locate_config_value(:flavor),
+          :security_groups => locate_config_value(:security_groups),
+          :key_name => locate_config_value(:openstack_ssh_key_id)
+        }
+
+        unless locate_config_value(:user_data).nil?
+          server_def.merge!({ :user_data => locate_config_value(:user_data) })
+        end
+
+        unless locate_config_value(:nics).nil?
+          nics_json = locate_config_value(:nics)
+          server_def.merge!({ :nics => JSON.parse(nics_json) })
         end
 
         Chef::Log.debug("Name #{node_name}")
