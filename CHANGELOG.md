@@ -1,3 +1,6 @@
+## v0.10.0
+* KNIFE-423 Add new command 'knife openstack network list', add option --nics
+
 ## v0.9.1
 * KNIFE-462 missing user_data throws stack
 
